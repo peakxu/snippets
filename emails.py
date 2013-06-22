@@ -3,7 +3,6 @@ import logging
 from google.appengine.api import mail
 from google.appengine.api import taskqueue
 from google.appengine.ext import webapp
-from google.appengine.ext.webapp import util
 
 from dateutil import *
 from model import *
@@ -13,6 +12,7 @@ Hey nerd,
 
 The kids want to know what you're up to. Don't leave 'em hanging.
 """
+
 
 class ReminderEmail(webapp.RequestHandler):
     def get(self):
@@ -24,7 +24,7 @@ class ReminderEmail(webapp.RequestHandler):
 
 class OneReminderEmail(webapp.RequestHandler):
     def post(self):
-        mail.send_mail(sender="snippets <snippets@fssnippets.appspotmail.com>",
+        mail.send_mail(sender="snippets <snippets@civil-pattern-254.appspotmail.com>",
                        to=self.request.get('email'),
                        subject="Snippet time!",
                        body=REMINDER)
@@ -32,16 +32,17 @@ class OneReminderEmail(webapp.RequestHandler):
     def get(self):
         post(self)
 
+
 class DigestEmail(webapp.RequestHandler):
     def get(self):
         all_users = User.all().filter("enabled =", True).fetch(500)
         for user in all_users:
             taskqueue.add(url='/onedigest', params={'email': user.email})
-            
+
 
 class OneDigestEmail(webapp.RequestHandler):
     def __send_mail(self, recipient, body):
-        mail.send_mail(sender="snippets <snippets@fssnippets.appspotmail.com>",
+        mail.send_mail(sender="snippets <snippets@civil-pattern-254.appspotmail.com>",
                        to=recipient,
                        subject="Snippet delivery!",
                        body=body)
@@ -62,6 +63,6 @@ class OneDigestEmail(webapp.RequestHandler):
         logging.info(all_snippets)
         body = '\n\n\n'.join([self.__snippet_to_text(s) for s in all_snippets if s.user.email in following])
         if body:
-            self.__send_mail(user.email, 'https://fssnippets.appspot.com\n\n' + body)
+            self.__send_mail(user.email, 'https://civil-pattern-254.appspot.com\n\n' + body)
         else:
             logging.info(user.email + ' not following anybody.')

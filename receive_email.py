@@ -1,6 +1,4 @@
-import datetime
 import email
-import logging
 import re
 
 from google.appengine.ext import webapp
@@ -9,6 +7,7 @@ from google.appengine.ext.webapp import util
 
 from dateutil import date_for_new_snippet
 from model import user_from_email, create_or_replace_snippet
+
 
 class ReceiveEmail(InboundMailHandler):
     """Receive a snippet email and create or replace snippet for this week."""
@@ -38,5 +37,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

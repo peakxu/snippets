@@ -2,7 +2,7 @@ import datetime
 
 class Eastern_tzinfo(datetime.tzinfo):
     """Implementation of the Eastern timezone.
-    
+
     Adapted from http://code.google.com/appengine/docs/python/datastore/typesandpropertyclasses.html
     """
     def utcoffset(self, dt):
@@ -10,7 +10,7 @@ class Eastern_tzinfo(datetime.tzinfo):
 
     def _FirstSunday(self, dt):
         """First Sunday on or after dt."""
-        return dt + datetime.timedelta(days=(6-dt.weekday()))
+        return dt + datetime.timedelta(days=(6 - dt.weekday()))
 
     def dst(self, dt):
         # 2 am on the second Sunday in March
@@ -22,14 +22,14 @@ class Eastern_tzinfo(datetime.tzinfo):
             return datetime.timedelta(hours=1)
         else:
             return datetime.timedelta(hours=0)
-        
+
     def tzname(self, dt):
         if self.dst(dt) == datetime.timedelta(hours=0):
             return "EST"
         else:
             return "EDT"
-        
-        
+
+
 def date_for_new_snippet():
     """Return next Monday, unless it is Monday (0) or Tuesday (1)"""
     today = datetime.datetime.now(Eastern_tzinfo()).date()
