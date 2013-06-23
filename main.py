@@ -17,9 +17,8 @@
 import os
 
 from google.appengine.api import users
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp2
 from google.appengine.ext.webapp import template
-from google.appengine.ext.webapp import util
 
 from emails import *
 from model import *
@@ -178,9 +177,7 @@ class MainHandler(BaseHandler):
                            }
         self.render('index', template_values)
 
-
-def main():
-    application = webapp.WSGIApplication(
+    application = webapp2.WSGIApplication(
                                          [('/', MainHandler),
                                           ('/user/(.*)', UserHandler),
                                           ('/tag/(.*)', TagHandler),
@@ -191,8 +188,3 @@ def main():
                                           ('/onereminder', OneReminderEmail),
                                           ('/onedigest', OneDigestEmail)],
                                           debug=True)
-    util.run_wsgi_app(application)
-
-
-if __name__ == '__main__':
-    main()

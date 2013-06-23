@@ -1,9 +1,8 @@
 import email
 import re
 
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp2
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
-from google.appengine.ext.webapp import util
 
 from dateutil import date_for_new_snippet
 from model import user_from_email, create_or_replace_snippet
@@ -30,10 +29,4 @@ class ReceiveEmail(InboundMailHandler):
 
             create_or_replace_snippet(user, content, date_for_new_snippet())
 
-
-def main():
-    application = webapp.WSGIApplication([ReceiveEmail.mapping()], debug=True)
-    util.run_wsgi_app(application)
-
-if __name__ == '__main__':
-    main()
+application = webapp2.WSGIApplication([ReceiveEmail.mapping()], debug=True)
