@@ -2,19 +2,19 @@ import logging
 
 from google.appengine.api import mail
 from google.appengine.api import taskqueue
-from google.appengine.ext import webapp
+import webapp2
 
 from dateutil import *
 from model import *
 
 REMINDER = """
-Hey nerd,
+Hello Carbonista,
 
-The kids want to know what you're up to. Don't leave 'em hanging.
+Let us know what you've been up to.
 """
 
 
-class ReminderEmail(webapp.RequestHandler):
+class ReminderEmail(webapp2.RequestHandler):
     def get(self):
         all_users = User.all().filter("enabled =", True).fetch(500)
         for user in all_users:
@@ -22,29 +22,29 @@ class ReminderEmail(webapp.RequestHandler):
             taskqueue.add(url='/onereminder', params={'email': user.email})
 
 
-class OneReminderEmail(webapp.RequestHandler):
+class OneReminderEmail(webapp2.RequestHandler):
     def post(self):
-        mail.send_mail(sender="snippets <snippets@civil-pattern-254.appspotmail.com>",
+        mail.send_mail(sender="snippets <snippets@crb-snippets-test.appspotmail.com>",
                        to=self.request.get('email'),
-                       subject="Snippet time!",
+                       subject="It's Snippet time!!!",
                        body=REMINDER)
 
     def get(self):
         post(self)
 
 
-class DigestEmail(webapp.RequestHandler):
+class DigestEmail(webapp2.RequestHandler):
     def get(self):
         all_users = User.all().filter("enabled =", True).fetch(500)
         for user in all_users:
             taskqueue.add(url='/onedigest', params={'email': user.email})
 
 
-class OneDigestEmail(webapp.RequestHandler):
+class OneDigestEmail(webapp2.RequestHandler):
     def __send_mail(self, recipient, body):
-        mail.send_mail(sender="snippets <snippets@civil-pattern-254.appspotmail.com>",
+        mail.send_mail(sender="snippets <snippets@crb-snippets-test.appspotmail.com>",
                        to=recipient,
-                       subject="Snippet delivery!",
+                       subject="*** Snippets Delivery *** :)",
                        body=body)
 
     def __snippet_to_text(self, snippet):
@@ -63,6 +63,6 @@ class OneDigestEmail(webapp.RequestHandler):
         logging.info(all_snippets)
         body = '\n\n\n'.join([self.__snippet_to_text(s) for s in all_snippets if s.user.email in following])
         if body:
-            self.__send_mail(user.email, 'https://civil-pattern-254.appspot.com\n\n' + body)
+            self.__send_mail(user.email, 'https://crb-snippets-test.appspot.com\n\n' + body)
         else:
             logging.info(user.email + ' not following anybody.')

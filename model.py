@@ -1,6 +1,6 @@
-import logging
+# import logging
 
-from google.appengine.api import users
+# from google.appengine.api import users
 from google.appengine.ext import db
 
 
@@ -24,18 +24,24 @@ class Snippet(db.Model):
 
 def compute_following(current_user, users):
     """Return set of email addresses being followed by this user."""
-    email_set = set(current_user.following)
-    tag_set = set(current_user.tags_following)
+    # email_set = set(current_user.following)
+    # tag_set = set(current_user.tags_following)
     following = set()
     for u in users:
-        if ((u.email in email_set) or
-            (len(tag_set.intersection(u.tags)) > 0)):
+#        if ((u.email in email_set) or
+#            (len(tag_set.intersection(u.tags)) > 0)):
             following.add(u.email)
     return following
 
 
 def user_from_email(email):
-    return User.all().filter("email =", email).fetch(1)[0]
+    userObj = User.all().filter("email =", email).fetch(1)
+    if not userObj:
+        userObj = User(email=email)
+        userObj.put()
+    else:
+        userObj = userObj[0]
+    return userObj
 
 
 def create_or_replace_snippet(user, text, date):
